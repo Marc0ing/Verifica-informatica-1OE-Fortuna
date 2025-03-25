@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Verifica di Tecnologia - Scuola Media</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: sans-serif; max-width: 800px; margin: auto; padding: 2rem; line-height: 1.6; }
+    h1 { text-align: center; }
+    .hidden { display: none; }
+    .question { margin-bottom: 2rem; }
+    .btn { padding: 10px 20px; font-size: 1rem; margin-top: 1rem; cursor: pointer; }
+    input[type="text"], textarea { width: 100%; padding: 8px; margin-top: 5px; }
+    label { display: block; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Verifica di Tecnologia</h1>
+  <p>Compila nome e cognome, poi rispondi alle domande. Al termine visualizzerai il tuo punteggio (automatico solo per le domande a scelta multipla).</p>
+
+  <div id="intro">
+    <label>Nome: <input type="text" id="nome" required></label>
+    <label>Cognome: <input type="text" id="cognome" required></label>
+    <button class="btn" onclick="startQuiz()">Inizia</button>
+  </div>
+
+  <form id="quiz" class="hidden">
+    <div id="questions"></div>
+    <button type="submit" class="btn">Invia risposte</button>
+  </form>
+
+  <div id="result" class="hidden"></div>
+
+  <script>
+    const questions = [
+      {
+        question: "Qual è il simbolo chimico dell'acqua?",
+        options: ["O2", "CO2", "H2O", "HO2"],
+        answer: "H2O"
+      },
+      {
+        question: "Quale tra questi è un materiale conduttore?",
+        options: ["Legno", "Plastica", "Rame", "Vetro"],
+        answer: "Rame"
+      },
+      {
+        question: "A cosa serve una leva?",
+        options: ["A decorare", "A sollevare pesi", "A tagliare", "A illuminare"],
+        answer: "A sollevare pesi"
+      }
+    ];
+
+    function startQuiz() {
+      document.getElementById('intro').classList.add('hidden');
+      document.getElementById('quiz').classList.remove('hidden');
+      showQuestions();
+    }
+
+    function showQuestions() {
+      const container = document.getElementById('questions');
+      container.innerHTML = "";
+      questions.forEach((q, index) => {
+        const div = document.createElement('div');
+        div.className = "question";
+        div.innerHTML = `<p>${index + 1}. ${q.question}</p>` +
+          q.options.map(opt =>
+            `<label><input type="radio" name="q${index}" value="${opt}"> ${opt}</label>`
+          ).join("<br>");
+        container.appendChild(div);
+      });
+    }
+
+    document.getElementById("quiz").addEventListener("submit", function(e) {
+      e.preventDefault();
+      let score = 0;
+      questions.forEach((q, index) => {
+        const selected = document.querySelector(`input[name="q${index}"]:checked`);
+        if (selected && selected.value === q.answer) {
+          score++;
+        }
+      });
+      document.getElementById('quiz').classList.add('hidden');
+      const result = document.getElementById('result');
+      result.classList.remove('hidden');
+      result.innerHTML = `<h2>Risultato</h2><p>Hai risposto correttamente a ${score} su ${questions.length} domande.</p>`;
+    });
+  </script>
+</body>
+</html>
